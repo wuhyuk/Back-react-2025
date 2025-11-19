@@ -1,24 +1,6 @@
-\# 📁 Project File Overview
+Unity\_Site.zip 	  ->	Collection of React files |
 
+MemorySpace.zip  ->	   Java project |
 
-
-\## 📦 File Description
-
-
-
-| File Name | Description |
-
-|----------|-------------|
-
-| WuhyukFile.zip | Wuhyuk's code |
-
-| Unity\_Site.zip | Collection of React files |
-
-| Plants.zip | Planet code file |
-
-| MemorySpace.zip | Java project |
-
-| DATABASEmemoryspace.txt | Database structure |
-
-| build.zip | Built React code |
+build.zip 		  ->	Built React code |
 
