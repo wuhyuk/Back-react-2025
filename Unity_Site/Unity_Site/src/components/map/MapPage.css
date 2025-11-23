@@ -1,0 +1,54 @@
+/* MapPage.css */
+
+.map-page-container {
+  width: 100%;
+  height: calc(100vh - 80px);
+  position: relative;
+  background-color: #d4dadc;
+  overflow: hidden;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background: #d4dadc;
+}
+
+/* 🔹 [클러스터] 뭉쳤을 때 스타일 */
+.custom-cluster-icon {
+  background: transparent; /* Leaflet 기본 사각형 배경 제거 */
+}
+
+.cluster-circle {
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); /* 그림자 추가 */
+  border: 2px solid white; /* 테두리로 깔끔하게 */
+  width: 100%;
+  height: 100%;
+}
+
+/* 🔹 [개별 마커] 흩어졌을 때 스타일 */
+.custom-single-icon {
+  background: transparent;
+}
+
+.single-circle {
+  border-radius: 50%;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  font-size: 12px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  /* flex 대신 line-height로 중앙 정렬했음 (JS 코드 참조) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

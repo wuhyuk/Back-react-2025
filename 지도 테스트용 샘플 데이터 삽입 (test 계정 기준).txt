@@ -1,0 +1,127 @@
+-- 지도 테스트용 샘플 데이터 삽입 (test 계정 기준)
+
+USE memoryspace;
+
+-- 1. test 사용자 ID 가져오기
+SET @userId = (SELECT id FROM users WHERE username = 'test');
+
+-- 2. test 사용자의 Star 생성
+INSERT INTO stars (userId, name)
+VALUES (@userId, '2024 여행 추억');
+
+SET @starId = LAST_INSERT_ID();
+
+-- 3. test 사용자의 Planet 생성
+INSERT INTO planets (starId, name, isDeleted)
+VALUES (@starId, '한국 여행', 0);
+
+SET @planetId = LAST_INSERT_ID();
+
+-- 4. 위치 정보가 있는 미디어 10개 삽입 (각기 다른 위치)
+INSERT INTO planet_media (planetId, mediaType, filePath, mimeType, sizeBytes, location, latitude, longitude)
+VALUES 
+  -- 서울 (3개)
+  (@planetId, 'photo', '/upload/seoul1.jpg', 'image/jpeg', 1024000, '서울', 37.5665, 126.9780),
+  (@planetId, 'photo', '/upload/seoul2.jpg', 'image/jpeg', 2048000, '서울', 37.5665, 126.9780),
+  (@planetId, 'video', '/upload/seoul_video.mp4', 'video/mp4', 5120000, '서울', 37.5665, 126.9780),
+  
+  -- 부산 (2개)
+  (@planetId, 'photo', '/upload/busan1.jpg', 'image/jpeg', 1536000, '부산', 35.1796, 129.0756),
+  (@planetId, 'photo', '/upload/busan2.jpg', 'image/jpeg', 1792000, '부산', 35.1796, 129.0756),
+  
+  -- 제주도 (2개)
+  (@planetId, 'photo', '/upload/jeju1.jpg', 'image/jpeg', 2560000, '제주도', 33.4996, 126.5312),
+  (@planetId, 'video', '/upload/jeju_video.mp4', 'video/mp4', 8192000, '제주도', 33.4996, 126.5312),
+  
+  -- 강릉 (1개)
+  (@planetId, 'photo', '/upload/gangneung.jpg', 'image/jpeg', 1280000, '강릉', 37.7519, 128.8761),
+  
+  -- 경주 (1개)
+  (@planetId, 'photo', '/upload/gyeongju.jpg', 'image/jpeg', 1408000, '경주', 35.8562, 129.2247),
+  
+  -- 전주 (1개)
+  (@planetId, 'photo', '/upload/jeonju.jpg', 'image/jpeg', 1664000, '전주', 35.8242, 127.1479);
+  
+  -- 4. 전 세계 다양한 위치의 미디어 20개 삽입
+INSERT INTO planet_media (planetId, mediaType, filePath, mimeType, sizeBytes, location, latitude, longitude)
+VALUES 
+  -- 🇰🇷 한국 - 서울 (2개)
+  (@planetId, 'photo', '/upload/seoul1.jpg', 'image/jpeg', 1024000, '서울', 37.5665, 126.9780),
+  (@planetId, 'video', '/upload/seoul_video.mp4', 'video/mp4', 5120000, '서울', 37.5665, 126.9780),
+  
+  -- 🇯🇵 일본 - 도쿄 (2개)
+  (@planetId, 'photo', '/upload/tokyo1.jpg', 'image/jpeg', 1536000, '도쿄', 35.6762, 139.6503),
+  (@planetId, 'photo', '/upload/tokyo2.jpg', 'image/jpeg', 1792000, '도쿄', 35.6762, 139.6503),
+  
+  -- 🇨🇳 중국 - 베이징 (1개)
+  (@planetId, 'photo', '/upload/beijing.jpg', 'image/jpeg', 2048000, '베이징', 39.9042, 116.4074),
+  
+  -- 🇹🇭 태국 - 방콕 (2개)
+  (@planetId, 'photo', '/upload/bangkok1.jpg', 'image/jpeg', 1280000, '방콕', 13.7563, 100.5018),
+  (@planetId, 'video', '/upload/bangkok_video.mp4', 'video/mp4', 6144000, '방콕', 13.7563, 100.5018),
+  
+  -- 🇫🇷 프랑스 - 파리 (3개)
+  (@planetId, 'photo', '/upload/paris1.jpg', 'image/jpeg', 2560000, '파리', 48.8566, 2.3522),
+  (@planetId, 'photo', '/upload/paris2.jpg', 'image/jpeg', 2304000, '파리', 48.8566, 2.3522),
+  (@planetId, 'video', '/upload/paris_video.mp4', 'video/mp4', 7168000, '파리', 48.8566, 2.3522),
+  
+  -- 🇬🇧 영국 - 런던 (2개)
+  (@planetId, 'photo', '/upload/london1.jpg', 'image/jpeg', 1920000, '런던', 51.5074, -0.1278),
+  (@planetId, 'photo', '/upload/london2.jpg', 'image/jpeg', 1664000, '런던', 51.5074, -0.1278),
+  
+  -- 🇺🇸 미국 - 뉴욕 (3개)
+  (@planetId, 'photo', '/upload/newyork1.jpg', 'image/jpeg', 2816000, '뉴욕', 40.7128, -74.0060),
+  (@planetId, 'photo', '/upload/newyork2.jpg', 'image/jpeg', 2432000, '뉴욕', 40.7128, -74.0060),
+  (@planetId, 'video', '/upload/newyork_video.mp4', 'video/mp4', 8192000, '뉴욕', 40.7128, -74.0060),
+  
+  -- 🇦🇺 호주 - 시드니 (2개)
+  (@planetId, 'photo', '/upload/sydney1.jpg', 'image/jpeg', 2176000, '시드니', -33.8688, 151.2093),
+  (@planetId, 'video', '/upload/sydney_video.mp4', 'video/mp4', 5632000, '시드니', -33.8688, 151.2093),
+  
+  -- 🇧🇷 브라질 - 리우데자네이루 (1개)
+  (@planetId, 'photo', '/upload/rio.jpg', 'image/jpeg', 1856000, '리우데자네이루', -22.9068, -43.1729),
+  
+  -- 🇪🇬 이집트 - 카이로 (1개)
+  (@planetId, 'photo', '/upload/cairo.jpg', 'image/jpeg', 1472000, '카이로', 30.0444, 31.2357),
+  
+  -- 🇿🇦 남아공 - 케이프타운 (1개)
+  (@planetId, 'photo', '/upload/capetown.jpg', 'image/jpeg', 1728000, '케이프타운', -33.9249, 18.4241);
+
+
+-- 5. 삽입된 데이터 확인
+SELECT '=== 삽입된 Stars ===' AS 'Info';
+SELECT * FROM stars WHERE userId = @userId;
+
+SELECT '=== 삽입된 Planets ===' AS 'Info';
+SELECT * FROM planets WHERE starId = @starId;
+
+SELECT '=== 삽입된 Planet Media ===' AS 'Info';
+SELECT id, planetId, mediaType, location, latitude, longitude FROM planet_media WHERE planetId = @planetId;
+
+-- 6. 지도용 데이터 확인 (GetMapLocationsServlet이 반환할 데이터)
+SELECT '=== 지도에 표시될 데이터 ===' AS 'Info';
+SELECT 
+    pm.location AS '위치',
+    pm.latitude AS '위도',
+    pm.longitude AS '경도',
+    COUNT(*) AS '미디어 개수'
+FROM planet_media pm
+INNER JOIN planets p ON pm.planetId = p.id
+WHERE p.isDeleted = 0 
+  AND pm.latitude IS NOT NULL 
+  AND pm.longitude IS NOT NULL
+  AND p.starId IN (SELECT id FROM stars WHERE userId = @userId)
+GROUP BY pm.location, pm.latitude, pm.longitude
+ORDER BY COUNT(*) DESC;
+
+-- 예상 지도 표시 결과:
+-- +--------+----------+-----------+--------------+
+-- | 위치   | 위도     | 경도      | 미디어 개수  |
+-- +--------+----------+-----------+--------------+
+-- | 서울   | 37.5665  | 126.9780  | 3            |
+-- | 부산   | 35.1796  | 129.0756  | 2            |
+-- | 제주도 | 33.4996  | 126.5312  | 2            |
+-- | 강릉   | 37.7519  | 128.8761  | 1            |
+-- | 경주   | 35.8562  | 129.2247  | 1            |
+-- | 전주   | 35.8242  | 127.1479  | 1            |
+-- +--------+----------+-----------+--------------+
