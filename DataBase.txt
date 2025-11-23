@@ -1,0 +1,107 @@
+
+-- 1) 데이터베이스 생성
+CREATE DATABASE memoryspace CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+
+-- 기존 테이블 삭제 (개발 환경용)
+DROP DATABASE IF EXISTS memoryspace;
+DROP TABLE IF EXISTS users, stars, planets, planet_media, tags, planet_tags, reports, login_log;
+
+-- 4) users 테이블
+USE memoryspace;
+
+CREATE TABLE users (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  username VARCHAR(50) NOT NULL UNIQUE,
+  passwordHash VARCHAR(255) NOT NULL,
+  nickname VARCHAR(50) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  liveIn VARCHAR(100),
+  role ENUM('USER','ADMIN') NOT NULL DEFAULT 'USER',
+  PRIMARY KEY (id)
+);
+
+-- stars 테이블
+CREATE TABLE stars (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  userId BIGINT UNSIGNED NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  
+  PRIMARY KEY (id),
+  INDEX (userId),
+  FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- planets 테이블
+CREATE TABLE planets (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  starId BIGINT UNSIGNED NOT NULL,
+  
+  name VARCHAR(100),
+  isDeleted TINYINT(1) DEFAULT 0,
+  
+  PRIMARY KEY (id),
+  INDEX (starId),
+  FOREIGN KEY (starId) REFERENCES stars(id) ON DELETE CASCADE
+);
+
+-- planet_media 테이블 (🔹 위치 컬럼 추가)
+CREATE TABLE planet_media (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  planetId BIGINT UNSIGNED NOT NULL,
+  
+  mediaType ENUM('photo','video') NOT NULL,
+  filePath VARCHAR(500) NOT NULL,
+  mimeType VARCHAR(100),
+  sizeBytes BIGINT UNSIGNED DEFAULT 0,
+  
+  -- 🔹 위치 관련 컬럼 추가 (각 미디어마다 다른 위치 가능)
+  location VARCHAR(200),           -- "서울", "부산" 등 위치 이름 (NULL 허용)
+  latitude DECIMAL(10, 8),         -- 위도 (예: 37.5665) (NULL 허용)
+  longitude DECIMAL(11, 8),        -- 경도 (예: 126.9780) (NULL 허용)
+  
+  PRIMARY KEY (id),
+  INDEX (planetId),
+  INDEX (location),                -- 🔹 location 검색 최적화를 위한 인덱스
+  FOREIGN KEY (planetId) REFERENCES planets(id) ON DELETE CASCADE
+);
+
+-- tags 테이블
+CREATE TABLE tags (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  name VARCHAR(100) NOT NULL UNIQUE,
+  PRIMARY KEY (id)
+);
+
+-- planet_tags 테이블
+CREATE TABLE planet_tags (
+  planetId BIGINT UNSIGNED NOT NULL,
+  tagId BIGINT UNSIGNED NOT NULL,
+  
+  PRIMARY KEY (planetId, tagId),
+  
+  FOREIGN KEY (planetId) REFERENCES planets(id) ON DELETE CASCADE,
+  FOREIGN KEY (tagId) REFERENCES tags(id) ON DELETE CASCADE
+);
+
+-- reports 테이블
+CREATE TABLE reports (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  planetId BIGINT UNSIGNED NOT NULL,
+  reporterUserId BIGINT UNSIGNED,
+  
+  reason VARCHAR(255),
+  status ENUM('new','processed') DEFAULT 'new',
+  
+  PRIMARY KEY (id),
+  
+  FOREIGN KEY (planetId) REFERENCES planets(id) ON DELETE CASCADE,
+  FOREIGN KEY (reporterUserId) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- login_log 테이블
+CREATE TABLE login_log (
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id     VARCHAR(50) NOT NULL,
+    login_time  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    logout_time DATETIME NULL
+);
